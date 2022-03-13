@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Briscola</string>
+    <string name="playbutton">PlayButton</string>
+    <string name="background">Background</string>
+    <string name="restart">Restart</string>
+    <string name="resume">Resume</string>
+    <string name="save_quit"><![CDATA[Save & Quit]]></string>
+    <string name="quit">Quit</string>
+    <string name="back">Back</string>
+</resources>
