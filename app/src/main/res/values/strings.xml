@@ -7,4 +7,5 @@
     <string name="save_quit"><![CDATA[Save & Quit]]></string>
     <string name="quit">Quit</string>
     <string name="back">Back</string>
+    <string name="unable">Unable to open outPutStream!</string>
 </resources>

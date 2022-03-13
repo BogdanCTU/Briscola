@@ -11,6 +11,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.FileNotFoundException;
+
 public class GamePlay extends AppCompatActivity {
 
     // PLAYER BUTTONS
@@ -29,7 +31,7 @@ public class GamePlay extends AppCompatActivity {
     private TextView enemyPointsLabel;
     private TextView cardWinnerTypeLabel;
 
-    //Saving Data
+    //Saving Data.txt
     public static final String PREFS_NAME = "GameplayData";
     public static SharedPreferences GameData;
     public static SharedPreferences sp;
@@ -42,18 +44,20 @@ public class GamePlay extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game_play);
 
-        //Load Save Data
-        GameData = getSharedPreferences(PREFS_NAME,0);
-        SharedPreferences sp = getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        // ID declarations
+        setButtonsID();
 
+        // Game Data
         Methodes.CreateDeck();
         Methodes.setType();
-        cardWinnerTypeLabel = findViewById(R.id.WinnerTypeLabel);
-        playerPointsLabel = findViewById(R.id.PlayerPointsLabel);
-        enemyPointsLabel = findViewById(R.id.EnemyPointsLabel);
 
-        // Load game Data
-        Methodes.LoadGameData();
+        // Load Data
+        // Prefs Not Working - :(
+        //GameData = getSharedPreferences(PREFS_NAME,0);
+        //SharedPreferences sp = getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
+        // File
+        //Methodes.L();
+        if(Methodes.LoadDataFile() == true)
 
         switch (Variables.winnerType) {
             case "c":
@@ -71,8 +75,40 @@ public class GamePlay extends AppCompatActivity {
         }
 
         // Declare Buttons \\
+        setButtonListeners();
 
+
+
+        if(Variables.gameStyle == 1) set_EnemyCards();
+
+        //pauseDialog = new Dialog(this);
+
+
+        // Set Image Button
+        setButtonsImage(){
+
+        }
+
+
+    }
+
+    private void setButtonsID(){
+        cardWinnerTypeLabel = findViewById(R.id.WinnerTypeLabel);
+        playerPointsLabel = findViewById(R.id.PlayerPointsLabel);
+        enemyPointsLabel = findViewById(R.id.EnemyPointsLabel);
+        enemyTableCard = findViewById(R.id.enemyDroppedCard);
+        pauseButton = (ImageButton)findViewById(R.id.pauseButton);
         playerCard1 = findViewById(R.id.playerCard1);
+        playerCard2 = findViewById(R.id.playerCard2);
+        playerCard3 = findViewById(R.id.playerCard3);
+        playerTableCard = findViewById(R.id.playerDroppedCard);
+        enemyCard1 = findViewById(R.id.enemyCard1);
+        enemyCard2 = findViewById(R.id.enemyCard2);
+        enemyCard3 = findViewById(R.id.enemyCard3);
+    }
+
+    private void setButtonListeners(){
+
         playerCard1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -84,7 +120,6 @@ public class GamePlay extends AppCompatActivity {
             }
         });
 
-        playerCard2 = findViewById(R.id.playerCard2);
         playerCard2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -92,7 +127,6 @@ public class GamePlay extends AppCompatActivity {
             }
         });
 
-        playerCard3 = findViewById(R.id.playerCard3);
         playerCard3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -100,9 +134,6 @@ public class GamePlay extends AppCompatActivity {
             }
         });
 
-        playerTableCard = findViewById(R.id.playerDroppedCard);
-
-        enemyCard1 = findViewById(R.id.enemyCard1);
         enemyCard1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -110,7 +141,6 @@ public class GamePlay extends AppCompatActivity {
             }
         });
 
-        enemyCard2 = findViewById(R.id.enemyCard2);
         enemyCard2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -118,7 +148,6 @@ public class GamePlay extends AppCompatActivity {
             }
         });
 
-        enemyCard3 = findViewById(R.id.enemyCard3);
         enemyCard3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -126,20 +155,16 @@ public class GamePlay extends AppCompatActivity {
             }
         });
 
-        enemyTableCard = findViewById(R.id.enemyDroppedCard);
-
-        if(Variables.gameStyle == 1) set_EnemyCards();
-
-        //pauseDialog = new Dialog(this);
-        pauseButton = (ImageButton)findViewById(R.id.pauseButton);
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Methodes.SaveGameData();   // Saving Game Data
-                openPauseActivity();
+                pauseClicked();
             }
         });
 
+    }
+
+    private void setButtonsImage(){
         playerCard1.setImageResource(Variables.DeckCards[Variables.player_card1].cardIcon);
         playerCard2.setImageResource(Variables.DeckCards[Variables.player_card2].cardIcon);
         playerCard3.setImageResource(Variables.DeckCards[Variables.player_card3].cardIcon);
@@ -148,19 +173,30 @@ public class GamePlay extends AppCompatActivity {
         enemyCard2.setImageResource(Variables.DeckCards[Variables.enemy_card2].cardIcon);
         enemyCard3.setImageResource(Variables.DeckCards[Variables.enemy_card3].cardIcon);
         enemyTableCard.setImageResource(Variables.DeckCards[Variables.enemy_table_card].cardIcon);
+    }
 
+    private void pauseClicked(){
+        //Methodes.SaveGameData();   // Saving Game Data.txt
+        try {
+            if(Methodes.SaveDataFile()) Toast.makeText(this, "outputDataStream opened!", Toast.LENGTH_SHORT).show();   //testing
+            else Toast.makeText(this, getString(R.string.unable), Toast.LENGTH_SHORT).show();
+            openPauseActivity();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
     }
-    /*
-    public void openPauseDialog(){
-        PauseDialog pd = new PauseDialog();
-        pd.show(getSupportFragmentManager(),"");
-    }
-     */
 
     public void openPauseActivity(){
         Intent intent = new Intent(this, PauseActivity.class);
         startActivity(intent);
     }
+
+    /* // Dialog -> NOT WORKING
+    public void openPauseDialog(){
+        PauseDialog pd = new PauseDialog();
+        pd.show(getSupportFragmentManager(),"");
+    }
+    */
 
     // Methods
 
@@ -537,7 +573,7 @@ public class GamePlay extends AppCompatActivity {
     private void enemy_Turn(){
         try {
             Thread.sleep(2000);
-            Toast.makeText(this, "Waiting 2s", Toast.LENGTH_SHORT).show();   //testing
+            //Toast.makeText(this, "Waiting 2s", Toast.LENGTH_SHORT).show();   //testing
         }
         catch (InterruptedException e) {
             e.printStackTrace();

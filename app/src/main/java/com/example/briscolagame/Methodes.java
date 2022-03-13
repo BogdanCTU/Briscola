@@ -1,25 +1,22 @@
 package com.example.briscolagame;
 
-import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Handler;
-
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.nio.ByteBuffer;
 import java.util.Random;
 import java.io.FileInputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStreamWriter;
 
 public class Methodes {
 
     public static void CreateDeck() {
 
         // null Card
-        Variables.DeckCards[0] = new CardClass(0, "n", 0, R.drawable.acard);
+        Variables.DeckCards[0] = new CardClass(0, "n", 0, R.drawable.amata);
 
         // Heart Cards
         Variables.DeckCards[1] = new CardClass(1, "c", 11, R.drawable.c1);
@@ -219,11 +216,10 @@ public class Methodes {
         Variables.droppedLast = 0;   //droppedFirst : 1 PLAYER / 2 ENEMY
     }
 
-
     public static void SaveGameData() {
         SharedPreferences.Editor editor = GamePlay.GameData.edit();
 
-        // Saving Data
+        // Saving Data.txt
 
         // Enemy
         editor.putBoolean("enemyButton1Pressed", Variables.enemyButton1Pressed);
@@ -312,21 +308,139 @@ public class Methodes {
         Variables.droppedLast = GamePlay.sp.getInt("droppedLast", Variables.droppedLast);
     }
 
-    public void SaveDataFile() throws FileNotFoundException {
-        String filename = "Data.txt";
-        String string = "Hello world!";
-        byte b; String s;
-        try (FileOutputStream outputStream = new FileOutputStream("Data.txt")) {
-            s = (String)Variables.enemyButton1Pressed;
-            outputStream.write((Variables.enemyButton1Pressed.toByteArray()));
+    public static boolean SaveDataFile() throws FileNotFoundException {
+        //File file = new File("app/src/main/java/com/example/briscolagame/Data.txt");
+        try (OutputStreamWriter outputStream = new OutputStreamWriter("Data", MODE_PRIVATE)) {
+            // ENEMY \\
+            outputStream.write((byte)(Variables.enemyButton1Pressed?1:0));
+            outputStream.write((byte)(Variables.enemyButton2Pressed?1:0));
+            outputStream.write((byte)(Variables.enemyButton3Pressed?1:0));
+            outputStream.write((byte)(Variables.enemyButton1firstclick?1:0));
+            outputStream.write((byte)(Variables.enemyButton2firstclick?1:0));
+            outputStream.write((byte)(Variables.enemyButton3firstclick?1:0));
+            outputStream.write((intToBytes(Variables.enemy_card1)));
+            outputStream.write((intToBytes(Variables.enemy_card2)));
+            outputStream.write((intToBytes(Variables.enemy_card3)));
+            outputStream.write((intToBytes(Variables.enemy_table_card)));
+            outputStream.write((intToBytes(Variables.enemy_points)));
 
+            // Player \\
+            outputStream.write((byte)(Variables.playerButton1Pressed?1:0));
+            outputStream.write((byte)(Variables.playerButton2Pressed?1:0));
+            outputStream.write((byte)(Variables.playerButton3Pressed?1:0));
+            outputStream.write((byte)(Variables.playerButton1firstclick?1:0));
+            outputStream.write((byte)(Variables.playerButton2firstclick?1:0));
+            outputStream.write((byte)(Variables.playerButton3firstclick?1:0));
+            outputStream.write((intToBytes(Variables.player_card1)));
+            outputStream.write((intToBytes(Variables.player_card2)));
+            outputStream.write((intToBytes(Variables.player_card3)));
+            outputStream.write((intToBytes(Variables.player_table_card)));
+            outputStream.write((intToBytes(Variables.player_points)));
 
+            // DECK \\
+            outputStream.write((intToBytes(Variables.usedCardsCount)));
+            for (int i = 0; i <= Variables.usedCardsCount; i++) {
+                if (Variables.usedCardsCount != 0) outputStream.write((intToBytes(Variables.userCardsArrey[i])));
+            }
+            outputStream.write((byte)(Variables.gameFinished?1:0));
+
+            // GAMEPLAY \\
+            outputStream.write((byte)(Variables.playerTurn?1:0));
+            outputStream.write((byte)(Variables.playerLastDropped?1:0));
+            outputStream.write((byte)(Variables.playerWins?1:0));
+            outputStream.write((byte)(Variables.playerFirstDrop?1:0));
+            outputStream.write((intToBytes(Variables.droppedCards)));
+            outputStream.write((intToBytes(Variables.droppedLast)));
+
+            outputStream.close();
+            return true;
         } catch (IOException e) {
+            //Toast.makeText(this, "Unable to open outPutStream!", Toast.LENGTH_SHORT).show();
             e.printStackTrace();
+            return false;
         }
-
     }
 
+    private void writeText(String test){
+        OutputStreamWriter o = new
+    }
+
+    private static byte[] intToBytes(final int i) {
+        ByteBuffer bb = ByteBuffer.allocate(8);
+        bb.putInt(i);
+        return bb.array();
+    }
+
+    public static boolean LoadDataFile()throws FileNotFoundException {
+        //File file = new File("app/src/main/java/com/example/briscolagame/Data.txt");
+        try (FileInputStream inputStream = new FileInputStream("Data")) {
+            byte[] b = new byte[8];
+            // ENEMY \\
+            int a = inputStream.read();
+            Variables.enemyButton2Pressed = (a != 0);
+            a = inputStream.read();
+            Variables.enemyButton2Pressed = (a != 0);
+            a = inputStream.read();
+            Variables.enemyButton3Pressed = (a != 0);
+            a = inputStream.read();
+            Variables.enemyButton1firstclick = (a != 0);
+            a = inputStream.read();
+            Variables.enemyButton2firstclick = (a != 0);
+            a = inputStream.read();
+            Variables.enemyButton3firstclick = (a != 0);
+            Variables.enemy_card1 = inputStream.read(b,0,8);
+            Variables.enemy_card2 = inputStream.read(b,0,8);
+            Variables.enemy_card3 = inputStream.read(b,0,8);
+            Variables.enemy_table_card = inputStream.read(b,0,8);
+            Variables.enemy_points = inputStream.read(b,0,8);
+
+            // Player \\
+            a = inputStream.read();
+            Variables.playerButton1Pressed = (a != 0);
+            a = inputStream.read();
+            Variables.playerButton2Pressed = (a != 0);
+            a = inputStream.read();
+            Variables.playerButton3Pressed = (a != 0);
+            a = inputStream.read();
+            Variables.playerButton1firstclick = (a != 0);
+            a = inputStream.read();
+            Variables.playerButton2firstclick = (a != 0);
+            a = inputStream.read();
+            Variables.playerButton3firstclick = (a != 0);
+            Variables.player_card1 = inputStream.read(b,0,8);
+            Variables.player_card2 = inputStream.read(b,0,8);
+            Variables.player_card3 = inputStream.read(b,0,8);
+            Variables.player_table_card = inputStream.read(b,0,8);
+            Variables.player_points = inputStream.read(b,0,8);
+
+            // DECK \\
+            Variables.usedCardsCount = inputStream.read(b,0,8);
+            for (int i = 0; i <= Variables.usedCardsCount; i++) {
+                if (Variables.usedCardsCount != 0)  Variables.userCardsArrey[i] = inputStream.read(b,0,8);
+            }
+            a = inputStream.read();
+            Variables.gameFinished = (a != 0);
+
+            // GAMEPLAY \\
+            a = inputStream.read();
+            Variables.playerTurn = (a != 0);
+            a = inputStream.read();
+            Variables.playerLastDropped = (a != 0);
+            a = inputStream.read();
+            Variables.playerWins = (a != 0);
+            a = inputStream.read();
+            Variables.playerFirstDrop = (a != 0);
+            Variables.droppedCards = inputStream.read(b,0,8);
+            Variables.droppedLast = inputStream.read(b,0,8);
+
+            inputStream.close();
+            return true;
+        } catch (IOException e) {
+            //Toast.makeText(this, "Unable to open outPutStream!", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+            return false;
+        }
+    }
 
     // EOF - End Of File
 }
