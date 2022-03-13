@@ -12,6 +12,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 
 public class GamePlay extends AppCompatActivity {
 
@@ -36,8 +39,11 @@ public class GamePlay extends AppCompatActivity {
     public static SharedPreferences GameData;
     public static SharedPreferences sp;
 
-    // On Create
+    // FILE
+    public static OutputStreamWriter outputFile;
+    public static InputStreamReader inputFile;
 
+    // On Create
     @SuppressLint("SetTextI18n")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +61,13 @@ public class GamePlay extends AppCompatActivity {
         // Prefs Not Working - :(
         //GameData = getSharedPreferences(PREFS_NAME,0);
         //SharedPreferences sp = getApplicationContext().getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE);
-        // File
-        //Methodes.L();
-        if(Methodes.LoadDataFile() == true)
+        try {
+            openFileOutputO();
+            //openFileInputI();   // Load Data
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
 
         switch (Variables.winnerType) {
             case "c":
@@ -77,19 +87,11 @@ public class GamePlay extends AppCompatActivity {
         // Declare Buttons \\
         setButtonListeners();
 
-
-
-        if(Variables.gameStyle == 1) set_EnemyCards();
-
-        //pauseDialog = new Dialog(this);
-
-
         // Set Image Button
-        setButtonsImage(){
+        setButtonsImage();
 
-        }
-
-
+        // Player VS AI
+        if(Variables.gameStyle == 1) set_EnemyCards();
     }
 
     private void setButtonsID(){
@@ -108,7 +110,6 @@ public class GamePlay extends AppCompatActivity {
     }
 
     private void setButtonListeners(){
-
         playerCard1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -134,26 +135,28 @@ public class GamePlay extends AppCompatActivity {
             }
         });
 
-        enemyCard1.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                on_enemyCard_clicked(1);
-            }
-        });
+        if(Variables.gameStyle == 0) {
+            enemyCard1.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    on_enemyCard_clicked(1);
+                }
+            });
 
-        enemyCard2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                on_enemyCard_clicked(2);
-            }
-        });
+            enemyCard2.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    on_enemyCard_clicked(2);
+                }
+            });
 
-        enemyCard3.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                on_enemyCard_clicked(3);
-            }
-        });
+            enemyCard3.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    on_enemyCard_clicked(3);
+                }
+            });
+        }
 
         pauseButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -161,7 +164,6 @@ public class GamePlay extends AppCompatActivity {
                 pauseClicked();
             }
         });
-
     }
 
     private void setButtonsImage(){
@@ -176,7 +178,7 @@ public class GamePlay extends AppCompatActivity {
     }
 
     private void pauseClicked(){
-        //Methodes.SaveGameData();   // Saving Game Data.txt
+        // File Save Data
         try {
             if(Methodes.SaveDataFile()) Toast.makeText(this, "outputDataStream opened!", Toast.LENGTH_SHORT).show();   //testing
             else Toast.makeText(this, getString(R.string.unable), Toast.LENGTH_SHORT).show();
@@ -191,6 +193,18 @@ public class GamePlay extends AppCompatActivity {
         startActivity(intent);
     }
 
+    //   https://www.youtube.com/watch?v=C0TcZhpSCNQ
+    // TODO do the same for FileOutputStream with bytes
+
+    // FILE
+    private void openFileOutputO() throws FileNotFoundException {   // Save Data
+        outputFile = new OutputStreamWriter(openFileOutput("Data.txt",MODE_PRIVATE));
+    }
+
+    private void openFileInputI() throws FileNotFoundException {   // Load Data
+        inputFile = new InputStreamReader(openFileInput("Data.txt"));
+    }
+
     /* // Dialog -> NOT WORKING
     public void openPauseDialog(){
         PauseDialog pd = new PauseDialog();
@@ -198,7 +212,7 @@ public class GamePlay extends AppCompatActivity {
     }
     */
 
-    // Methods
+        //  //  // Methods \\  \\  \\
 
     //  //  // Player VS Player \\  \\  \\
 
