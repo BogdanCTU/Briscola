@@ -23,7 +23,7 @@ public class PauseActivity extends AppCompatActivity {
 
         // Buttons
 
-        quitButton = (Button) findViewById(R.id.QuitButton);
+        quitButton = (Button) findViewById(R.id.QuitButtonP);
         quitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -46,14 +46,9 @@ public class PauseActivity extends AppCompatActivity {
             @Override
             public void onClick (View view){
                 Methodes.resetVariables();
-                openMainActivity();
+                openGameActivity();
             }
         });
-    }
-
-    private void openMainActivity(){
-        Intent intent = new Intent(this, MainActivity.class);
-        startActivity(intent);
     }
 
     private void openGameActivity(){

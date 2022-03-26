@@ -217,11 +217,11 @@
             android:orientation="horizontal">
 
             <ImageButton
-                android:onClick="PausePopup"
                 android:id="@+id/pauseButton"
                 android:layout_width="50dp"
                 android:layout_height="50dp"
-                app:srcCompat="@drawable/amata" />
+                app:srcCompat="@drawable/amata"
+                tools:ignore="SpeakableTextPresentCheck" />
         </LinearLayout>
 
         <LinearLayout

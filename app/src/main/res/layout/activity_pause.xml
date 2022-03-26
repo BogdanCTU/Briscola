@@ -52,7 +52,7 @@
             android:layout_height="wrap_content" />
 
         <Button
-            android:id="@+id/QuitButton"
+            android:id="@+id/QuitButtonP"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:background="@drawable/rounded_corner"

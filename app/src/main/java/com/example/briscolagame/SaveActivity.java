@@ -23,7 +23,7 @@ public class SaveActivity extends AppCompatActivity {
 
         // Buttons
 
-        SaveQuitButton = (Button) findViewById(R.id.QuitButton);
+        SaveQuitButton = (Button) findViewById(R.id.QuitButtonP);
         SaveQuitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -48,7 +48,6 @@ public class SaveActivity extends AppCompatActivity {
                 openPauseActivity();
             }
         });
-
     }
 
     public void openMainActivity(){

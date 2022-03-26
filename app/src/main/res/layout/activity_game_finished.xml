@@ -27,38 +27,49 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <Button
-            android:id="@+id/ResumeButton"
-            android:layout_width="150dp"
+        <TextView
+            android:id="@+id/gamefinishedl"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/rounded_corner"
-            android:onClick="ResumeButtonPressed"
-            android:text="@string/resume" />
+            android:gravity="center_horizontal"
+            android:text="Game Finished!"
+            android:textColor="#F8F8F8"
+            android:textSize="16sp"
+            android:textStyle="bold" />
 
         <TextView
-            android:id="@+id/l1"
+            android:id="@+id/WinnderLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal"
+            android:text="Player Wins!"
+            android:textColor="#F8F8F8"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/l6"
             android:layout_width="10dp"
             android:layout_height="wrap_content" />
 
         <Button
-            android:id="@+id/RestartButton"
+            android:id="@+id/RestartFinishedButton"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:background="@drawable/rounded_corner"
             android:text="@string/restart" />
 
         <TextView
-            android:id="@+id/l2"
+            android:id="@+id/l7"
             android:layout_width="10dp"
             android:layout_height="wrap_content" />
 
         <Button
-            android:onClick="QuitButtonPressed"
-            android:id="@+id/QuitButton"
+            android:id="@+id/QuitGameFinishedButton"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:background="@drawable/rounded_corner"
             android:text="@string/quit" />
-    </LinearLayout>
 
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
