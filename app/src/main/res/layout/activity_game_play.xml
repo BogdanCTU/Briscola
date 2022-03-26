@@ -17,7 +17,6 @@
         app:layout_constraintTop_toTopOf="parent"
         android:contentDescription="@string/background" />
 
-
     <LinearLayout
         android:id="@+id/enemyLayout"
         android:layout_width="409dp"

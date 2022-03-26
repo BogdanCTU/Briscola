@@ -39,5 +39,8 @@ public class Variables {
     // Function
     public static int gameStyle = 0;   // 0 pvp   -   1 pvc easy   -   2 pvc hard
 
+    // Online Game Play
+    public static int player_number = 0;   // 1 player 2 enemy
+
     //EOF - End Of File
 }
