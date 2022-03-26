@@ -24,7 +24,10 @@ import java.sql.Statement;
 
 public class OnlineGamePlay extends AppCompatActivity {
 
-    //My IP   192.168.100.29
+    //My IP   192.168.100.6
+
+    // IInstantiez clasa thread u un mesaj ce vreau sa trimit, adica un string cu variabilele mele
+
 
     // PLAYER BUTTONS
     private ImageButton playerCard1;
@@ -152,6 +155,35 @@ public class OnlineGamePlay extends AppCompatActivity {
             Variables.userCardsArrey[39] = resultSet.getInt(71);
         }
     }
+
+    public static void SendData() {
+        String message;
+        message = Variables.enemyButton1Pressed + "-" +
+                Variables.enemyButton2Pressed + "-" +
+                Variables.enemyButton3Pressed + "-" +
+                Variables.enemyButton1firstclick + "-" +
+                Variables.enemyButton2firstclick + "-" +
+                Variables.enemyButton3firstclick + "-" +
+                Variables.enemy_card1 + "-" +
+                Variables.enemy_card2 + "-" +
+                Variables.enemy_card3 + "-" +
+                Variables.enemy_table_card + "-" +
+                Variables.enemy_points + "-" +
+                Variables.playerButton1Pressed + "-" +
+                Variables.playerButton2Pressed + "-" +
+                Variables.playerButton3Pressed + "-" +
+                Variables.playerButton1firstclick + "-" +
+                Variables.playerButton2firstclick + "-" +
+                Variables.playerButton3firstclick + "-" +
+                Variables.player_card1 + "-" +
+                Variables.player_card2 + "-" +
+                Variables.player_card3 + "-" +
+                Variables.player_table_card + "-" +
+                Variables.player_points + "-" +
+                Variables.usedCardsCount + "-" +
+                Variables.gameFinished:1
+    }
+
 
     // On Create
     @SuppressLint("SetTextI18n")

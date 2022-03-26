@@ -24,7 +24,7 @@ import java.sql.Statement;
 
 public class GamePlay extends AppCompatActivity {
 
-    //My IP   192.168.100.29
+    //My IP   192.168.100.29 / 192.168.100.6
 
     // PLAYER BUTTONS
     private ImageButton playerCard1;
