@@ -57,6 +57,18 @@
             android:layout_height="wrap_content"
             android:background="@drawable/rounded_corner"
             android:text="@string/quit" />
+
+        <TextView
+            android:id="@+id/l3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/QuitSaveButtonP"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:background="@drawable/rounded_corner"
+            android:text="@string/quit" />
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

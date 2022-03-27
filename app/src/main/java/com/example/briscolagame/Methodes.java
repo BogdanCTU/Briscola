@@ -1,12 +1,8 @@
 package com.example.briscolagame;
 
-import android.content.SharedPreferences;
 import android.os.Handler;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStreamWriter;
-import java.nio.ByteBuffer;
 import java.util.Random;
 import java.io.FileInputStream;
 
@@ -215,6 +211,184 @@ public class Methodes {
         Variables.droppedLast = 0;   //droppedFirst : 1 PLAYER / 2 ENEMY
     }
 
+    private static void writeText(String text) throws IOException {
+        // declaration of output file in GamePlay.java
+        GamePlay.outputFile.write(text);
+    }
+
+    public static boolean SaveDataFile() throws FileNotFoundException {
+        try {
+            // ENEMY \\
+            String s;
+            if(!Variables.enemyButton1Pressed) s = "1\n";
+            else s = "0\n";
+            writeText(s);
+            if(!Variables.enemyButton2Pressed) s = "1\n";
+            else s = "0\n";
+            writeText(s);
+            if(!Variables.enemyButton3Pressed) s = "1\n";
+            else s = "0\n";
+            writeText(s);
+            if(!Variables.enemyButton1firstclick) s = "1\n";
+            else s = "0\n";
+            writeText(s);
+            if (!Variables.enemyButton2firstclick) s = "1\n";
+            else s = "0\n";
+            writeText(s);
+            if(!Variables.enemyButton3firstclick) s = "1\n";
+            else s = "0\n";
+            writeText(s);
+            s = String.valueOf(Variables.enemy_card1) + "\n";   // Form One
+            writeText(s);
+            s = Variables.enemy_card2 + "\n";   // Form Two
+            writeText(s);
+            s = Variables.enemy_card3 + "\n";
+            writeText(s);
+            s = Variables.enemy_table_card + "\n";
+            writeText(s);
+            s = Variables.enemy_points + "\n";
+            writeText(s);
+
+            // Player \\
+            if (!Variables.playerButton1Pressed) s = "1\n";
+            else s = "0\n";
+            writeText(s);
+            if (!Variables.playerButton2Pressed) s = "1\n";
+            else s = "0\n";
+            writeText(s);
+            if (!Variables.playerButton3Pressed) s = "1\n";
+            else s = "0\n";
+            writeText(s);
+            if(!Variables.playerButton1firstclick) s = "1\n";
+            else s = "0\n";
+            writeText(s);
+            if (!Variables.playerButton2firstclick) s = "1\n";
+            else s = "0\n";
+            writeText(s);
+            if (!Variables.playerButton3firstclick) s = "1\n";
+            else s = "0\n";
+            writeText(s);
+            s = String.valueOf(Variables.player_card1) + "\n";   // Form One
+            writeText(s);
+            s = Variables.player_card2 + "\n";   // Form Two
+            writeText(s);
+            s = Variables.player_card3 + "\n";
+            writeText(s);
+            s = Variables.player_table_card + "\n";
+            writeText(s);
+            s = Variables.player_points + "\n";
+            writeText(s);
+
+            // DECK \\
+            s = Variables.usedCardsCount + "\n";
+            writeText(s);
+            for (int i = 0; i <= Variables.usedCardsCount; i++) {
+                if (Variables.usedCardsCount != 0){
+                    s = Variables.userCardsArrey[i] + "\n";
+                    writeText(s);
+                }
+            }
+            if (!Variables.gameFinished) s = "1\n";
+            else s = "0\n";
+            writeText(s);
+
+            // GAMEPLAY \\
+            if (!Variables.playerTurn) s = "1\n";
+            else s = "0\n";
+            writeText(s);
+            if (!Variables.playerLastDropped) s = "1\n";
+            else s = "0\n";
+            writeText(s);
+            if (!Variables.playerWins) s = "1\n";
+            else s = "0\n";
+            writeText(s);
+            if (!Variables.playerFirstDrop) s = "1\n";
+            else s = "0\n";
+            writeText(s);
+            s = Variables.droppedCards + "\n";
+            writeText(s);
+            s = Variables.droppedLast + "\n";
+            writeText(s);
+
+            return true;
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public static boolean LoadDataFile()throws FileNotFoundException {
+        //File file = new File("app/src/main/java/com/example/briscolagame/Data.txt");
+        try (FileInputStream inputStream = new FileInputStream("Data")) {
+            byte[] b = new byte[8];
+            // ENEMY \\
+            int a = inputStream.read();
+            Variables.enemyButton2Pressed = (a != 0);
+            a = inputStream.read();
+            Variables.enemyButton2Pressed = (a != 0);
+            a = inputStream.read();
+            Variables.enemyButton3Pressed = (a != 0);
+            a = inputStream.read();
+            Variables.enemyButton1firstclick = (a != 0);
+            a = inputStream.read();
+            Variables.enemyButton2firstclick = (a != 0);
+            a = inputStream.read();
+            Variables.enemyButton3firstclick = (a != 0);
+            Variables.enemy_card1 = inputStream.read(b,0,8);
+            Variables.enemy_card2 = inputStream.read(b,0,8);
+            Variables.enemy_card3 = inputStream.read(b,0,8);
+            Variables.enemy_table_card = inputStream.read(b,0,8);
+            Variables.enemy_points = inputStream.read(b,0,8);
+
+            // Player \\
+            a = inputStream.read();
+            Variables.playerButton1Pressed = (a != 0);
+            a = inputStream.read();
+            Variables.playerButton2Pressed = (a != 0);
+            a = inputStream.read();
+            Variables.playerButton3Pressed = (a != 0);
+            a = inputStream.read();
+            Variables.playerButton1firstclick = (a != 0);
+            a = inputStream.read();
+            Variables.playerButton2firstclick = (a != 0);
+            a = inputStream.read();
+            Variables.playerButton3firstclick = (a != 0);
+            Variables.player_card1 = inputStream.read(b,0,8);
+            Variables.player_card2 = inputStream.read(b,0,8);
+            Variables.player_card3 = inputStream.read(b,0,8);
+            Variables.player_table_card = inputStream.read(b,0,8);
+            Variables.player_points = inputStream.read(b,0,8);
+
+            // DECK \\
+            Variables.usedCardsCount = inputStream.read(b,0,8);
+            for (int i = 0; i <= Variables.usedCardsCount; i++) {
+                if (Variables.usedCardsCount != 0)  Variables.userCardsArrey[i] = inputStream.read(b,0,8);
+            }
+            a = inputStream.read();
+            Variables.gameFinished = (a != 0);
+
+            // GAMEPLAY \\
+            a = inputStream.read();
+            Variables.playerTurn = (a != 0);
+            a = inputStream.read();
+            Variables.playerLastDropped = (a != 0);
+            a = inputStream.read();
+            Variables.playerWins = (a != 0);
+            a = inputStream.read();
+            Variables.playerFirstDrop = (a != 0);
+            Variables.droppedCards = inputStream.read(b,0,8);
+            Variables.droppedLast = inputStream.read(b,0,8);
+
+            inputStream.close();
+            return true;
+        } catch (IOException e) {
+            //Toast.makeText(this, "Unable to open outPutStream!", Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    /* Using SharedPreferences - not working
     public static void SaveGameData() {
         SharedPreferences.Editor editor = GamePlay.GameData.edit();
 
@@ -308,7 +482,7 @@ public class Methodes {
     }
 
     // Save Load Data using FileStream - not working
-    /*
+
     public static boolean SaveDataFile() throws FileNotFoundException {
         //File file = new File("app/src/main/java/com/example/briscolagame/Data.txt");
         try (FileOutputStream outputStream = new FileOutputStream("Data")) {
@@ -441,190 +615,6 @@ public class Methodes {
         }
     }
     */
-
-    private static void writeText(String text) throws IOException {
-        // declaration of output file in GamePlay.java
-        GamePlay.outputFile.write(text);
-    }
-
-    public static boolean SaveDataFile() throws FileNotFoundException {
-        try {
-            // ENEMY \\
-            String s;
-            if(!Variables.enemyButton1Pressed) s = "1\n";
-            else s = "0\n";
-            writeText(s);
-            if(!Variables.enemyButton2Pressed) s = "1\n";
-            else s = "0\n";
-            writeText(s);
-            if(!Variables.enemyButton3Pressed) s = "1\n";
-            else s = "0\n";
-            writeText(s);
-            if(!Variables.enemyButton1firstclick) s = "1\n";
-            else s = "0\n";
-            writeText(s);
-            if (!Variables.enemyButton2firstclick) s = "1\n";
-            else s = "0\n";
-            writeText(s);
-            if(!Variables.enemyButton3firstclick) s = "1\n";
-            else s = "0\n";
-            writeText(s);
-            s = String.valueOf(Variables.enemy_card1) + "\n";   // Form One
-            writeText(s);
-            s = Variables.enemy_card2 + "\n";   // Form Two
-            writeText(s);
-            s = Variables.enemy_card3 + "\n";
-            writeText(s);
-            s = Variables.enemy_table_card + "\n";
-            writeText(s);
-            s = Variables.enemy_points + "\n";
-            writeText(s);
-
-            // Player \\
-            if (!Variables.playerButton1Pressed) s = "1\n";
-            else s = "0\n";
-            writeText(s);
-            if (!Variables.playerButton2Pressed) s = "1\n";
-            else s = "0\n";
-            writeText(s);
-            if (!Variables.playerButton3Pressed) s = "1\n";
-            else s = "0\n";
-            writeText(s);
-            if(!Variables.playerButton1firstclick) s = "1\n";
-            else s = "0\n";
-            writeText(s);
-            if (!Variables.playerButton2firstclick) s = "1\n";
-            else s = "0\n";
-            writeText(s);
-            if (!Variables.playerButton3firstclick) s = "1\n";
-            else s = "0\n";
-            writeText(s);
-            s = String.valueOf(Variables.player_card1) + "\n";   // Form One
-            writeText(s);
-            s = Variables.player_card2 + "\n";   // Form Two
-            writeText(s);
-            s = Variables.player_card3 + "\n";
-            writeText(s);
-            s = Variables.player_table_card + "\n";
-            writeText(s);
-            s = Variables.player_points + "\n";
-            writeText(s);
-
-            // DECK \\
-            s = Variables.usedCardsCount + "\n";
-            writeText(s);
-            for (int i = 0; i <= Variables.usedCardsCount; i++) {
-                if (Variables.usedCardsCount != 0){
-                    s = Variables.userCardsArrey[i] + "\n";
-                    writeText(s);
-                }
-            }
-            if (!Variables.gameFinished) s = "1\n";
-            else s = "0\n";
-            writeText(s);
-
-            // GAMEPLAY \\
-            if (!Variables.playerTurn) s = "1\n";
-            else s = "0\n";
-            writeText(s);
-            if (!Variables.playerLastDropped) s = "1\n";
-            else s = "0\n";
-            writeText(s);
-            if (!Variables.playerWins) s = "1\n";
-            else s = "0\n";
-            writeText(s);
-            if (!Variables.playerFirstDrop) s = "1\n";
-            else s = "0\n";
-            writeText(s);
-            s = Variables.droppedCards + "\n";
-            writeText(s);
-            s = Variables.droppedLast + "\n";
-            writeText(s);
-
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-            return false;
-        }
-    }
-
-    private static byte[] intToBytes(final int i) {
-        ByteBuffer bb = ByteBuffer.allocate(8);
-        bb.putInt(i);
-        return bb.array();
-    }
-
-    public static boolean LoadDataFile()throws FileNotFoundException {
-        //File file = new File("app/src/main/java/com/example/briscolagame/Data.txt");
-        try (FileInputStream inputStream = new FileInputStream("Data")) {
-            byte[] b = new byte[8];
-            // ENEMY \\
-            int a = inputStream.read();
-            Variables.enemyButton2Pressed = (a != 0);
-            a = inputStream.read();
-            Variables.enemyButton2Pressed = (a != 0);
-            a = inputStream.read();
-            Variables.enemyButton3Pressed = (a != 0);
-            a = inputStream.read();
-            Variables.enemyButton1firstclick = (a != 0);
-            a = inputStream.read();
-            Variables.enemyButton2firstclick = (a != 0);
-            a = inputStream.read();
-            Variables.enemyButton3firstclick = (a != 0);
-            Variables.enemy_card1 = inputStream.read(b,0,8);
-            Variables.enemy_card2 = inputStream.read(b,0,8);
-            Variables.enemy_card3 = inputStream.read(b,0,8);
-            Variables.enemy_table_card = inputStream.read(b,0,8);
-            Variables.enemy_points = inputStream.read(b,0,8);
-
-            // Player \\
-            a = inputStream.read();
-            Variables.playerButton1Pressed = (a != 0);
-            a = inputStream.read();
-            Variables.playerButton2Pressed = (a != 0);
-            a = inputStream.read();
-            Variables.playerButton3Pressed = (a != 0);
-            a = inputStream.read();
-            Variables.playerButton1firstclick = (a != 0);
-            a = inputStream.read();
-            Variables.playerButton2firstclick = (a != 0);
-            a = inputStream.read();
-            Variables.playerButton3firstclick = (a != 0);
-            Variables.player_card1 = inputStream.read(b,0,8);
-            Variables.player_card2 = inputStream.read(b,0,8);
-            Variables.player_card3 = inputStream.read(b,0,8);
-            Variables.player_table_card = inputStream.read(b,0,8);
-            Variables.player_points = inputStream.read(b,0,8);
-
-            // DECK \\
-            Variables.usedCardsCount = inputStream.read(b,0,8);
-            for (int i = 0; i <= Variables.usedCardsCount; i++) {
-                if (Variables.usedCardsCount != 0)  Variables.userCardsArrey[i] = inputStream.read(b,0,8);
-            }
-            a = inputStream.read();
-            Variables.gameFinished = (a != 0);
-
-            // GAMEPLAY \\
-            a = inputStream.read();
-            Variables.playerTurn = (a != 0);
-            a = inputStream.read();
-            Variables.playerLastDropped = (a != 0);
-            a = inputStream.read();
-            Variables.playerWins = (a != 0);
-            a = inputStream.read();
-            Variables.playerFirstDrop = (a != 0);
-            Variables.droppedCards = inputStream.read(b,0,8);
-            Variables.droppedLast = inputStream.read(b,0,8);
-
-            inputStream.close();
-            return true;
-        } catch (IOException e) {
-            //Toast.makeText(this, "Unable to open outPutStream!", Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-            return false;
-        }
-    }
-
 
     // EOF - End Of File
 }

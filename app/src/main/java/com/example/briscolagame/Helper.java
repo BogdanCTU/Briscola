@@ -16,4 +16,5 @@ public class Helper {
         return new PrintWriter(socket.getOutputStream(), true);
     }
 
+    // EOF - End Of File
 }

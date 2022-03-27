@@ -16,6 +16,7 @@ import android.widget.Toast;
 import java.io.FileNotFoundException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
+import java.net.Socket;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -25,9 +26,7 @@ import java.sql.Statement;
 public class OnlineGamePlay extends AppCompatActivity {
 
     //My IP   192.168.100.6
-
-    // IInstantiez clasa thread u un mesaj ce vreau sa trimit, adica un string cu variabilele mele
-
+    // Instantiez clasa thread cu un mesaj ce vreau sa trimit, adica un string cu variabilele mele
 
     // PLAYER BUTTONS
     private ImageButton playerCard1;
@@ -45,145 +44,93 @@ public class OnlineGamePlay extends AppCompatActivity {
     private TextView enemyPointsLabel;
     private TextView cardWinnerTypeLabel;
 
-    //Saving Data.txt
-    //public static final String PREFS_NAME = "GameplayData";
-    public static SharedPreferences GameData;
-    public static SharedPreferences sp;
-
-    // FILE
-    public static OutputStreamWriter outputFile;
-    public static InputStreamReader inputFile;
-
     // DATABASE
     private final String IP = "192.168.100.29";
-    private final String PORT = "1433";
-    private final String CLASSES = "net.sourceforge.jtds.jdbc.Driver";
-    private final String DATABASE = "BriscolaDatabase";
-    private final String USERNAME = "";
-    private final String PASSWORD = "";
-    private final String URL = "jdbc:jtds:sqlserver://" + IP + ":" + PORT + "/" + DATABASE;
-
-    private Connection CONNECTION = null;
-
-    public void DATABASE_READ() throws SQLException {
-        if(CONNECTION != null){
-            Statement statement = CONNECTION.createStatement();
-            ResultSet resultSet = statement.executeQuery("Select * from Briscola;");
-
-            //resultSet = statement.executeQuery("Insert ")
-
-            // Reading Data
-            resultSet.next();
-
-            //Enemy
-            Variables.enemyButton1Pressed = resultSet.getInt(1) == 0;
-            Variables.enemyButton2Pressed = resultSet.getInt(2) == 0;
-            Variables.enemyButton3Pressed = resultSet.getInt(3) == 0;
-            Variables.enemyButton1firstclick = resultSet.getInt(4) == 0;
-            Variables.enemyButton2firstclick = resultSet.getInt(5) == 0;
-            Variables.enemyButton3firstclick = resultSet.getInt(6) == 0;
-            Variables.enemy_card1 = resultSet.getInt(7);
-            Variables.enemy_card2 = resultSet.getInt(8);
-            Variables.enemy_card3 = resultSet.getInt(9);
-            Variables.enemy_table_card = resultSet.getInt(10);
-            Variables.enemy_points = resultSet.getInt(11);
-
-            //Player
-            Variables.playerButton1Pressed = resultSet.getInt(12) == 0;
-            Variables.playerButton2Pressed = resultSet.getInt(13) == 0;
-            Variables.playerButton3Pressed = resultSet.getInt(14) == 0;
-            Variables.playerButton1firstclick = resultSet.getInt(15) == 0;
-            Variables.playerButton2firstclick = resultSet.getInt(16) == 0;
-            Variables.playerButton3firstclick = resultSet.getInt(17) == 0;
-            Variables.player_card1 = resultSet.getInt(18);
-            Variables.player_card2 = resultSet.getInt(19);
-            Variables.player_card3 = resultSet.getInt(20);
-            Variables.player_table_card = resultSet.getInt(21);
-            Variables.player_points = resultSet.getInt(22);
-
-            //Gameplay
-            Variables.usedCardsCount = resultSet.getInt(23);
-            Variables.gameFinished = resultSet.getInt(24) == 0;
-            Variables.playerTurn = resultSet.getInt(25) == 0;
-            Variables.playerLastDropped = resultSet.getInt(26) == 0;
-            Variables.playerWins = resultSet.getInt(27) == 0;
-            Variables.playerFirstDrop = resultSet.getInt(28) == 0;
-            Variables.winnerType = resultSet.getString(29);
-            Variables.droppedCards = resultSet.getInt(30);
-            Variables.droppedLast = resultSet.getInt(31);
-
-            //used cards from 0 to 39
-            Variables.userCardsArrey[0] = resultSet.getInt(32);
-            Variables.userCardsArrey[1] = resultSet.getInt(33);
-            Variables.userCardsArrey[2] = resultSet.getInt(34);
-            Variables.userCardsArrey[3] = resultSet.getInt(35);
-            Variables.userCardsArrey[4] = resultSet.getInt(36);
-            Variables.userCardsArrey[5] = resultSet.getInt(37);
-            Variables.userCardsArrey[6] = resultSet.getInt(38);
-            Variables.userCardsArrey[7] = resultSet.getInt(39);
-            Variables.userCardsArrey[8] = resultSet.getInt(40);
-            Variables.userCardsArrey[9] = resultSet.getInt(41);
-            Variables.userCardsArrey[10] = resultSet.getInt(42);
-            Variables.userCardsArrey[11] = resultSet.getInt(43);
-            Variables.userCardsArrey[12] = resultSet.getInt(44);
-            Variables.userCardsArrey[13] = resultSet.getInt(45);
-            Variables.userCardsArrey[14] = resultSet.getInt(46);
-            Variables.userCardsArrey[15] = resultSet.getInt(47);
-            Variables.userCardsArrey[16] = resultSet.getInt(48);
-            Variables.userCardsArrey[17] = resultSet.getInt(49);
-            Variables.userCardsArrey[18] = resultSet.getInt(50);
-            Variables.userCardsArrey[19] = resultSet.getInt(51);
-            Variables.userCardsArrey[20] = resultSet.getInt(52);
-            Variables.userCardsArrey[21] = resultSet.getInt(53);
-            Variables.userCardsArrey[22] = resultSet.getInt(54);
-            Variables.userCardsArrey[23] = resultSet.getInt(55);
-            Variables.userCardsArrey[24] = resultSet.getInt(56);
-            Variables.userCardsArrey[25] = resultSet.getInt(57);
-            Variables.userCardsArrey[26] = resultSet.getInt(58);
-            Variables.userCardsArrey[27] = resultSet.getInt(59);
-            Variables.userCardsArrey[28] = resultSet.getInt(60);
-            Variables.userCardsArrey[29] = resultSet.getInt(61);
-            Variables.userCardsArrey[30] = resultSet.getInt(62);
-            Variables.userCardsArrey[31] = resultSet.getInt(63);
-            Variables.userCardsArrey[32] = resultSet.getInt(64);
-            Variables.userCardsArrey[33] = resultSet.getInt(65);
-            Variables.userCardsArrey[34] = resultSet.getInt(66);
-            Variables.userCardsArrey[35] = resultSet.getInt(67);
-            Variables.userCardsArrey[36] = resultSet.getInt(68);
-            Variables.userCardsArrey[37] = resultSet.getInt(69);
-            Variables.userCardsArrey[38] = resultSet.getInt(70);
-            Variables.userCardsArrey[39] = resultSet.getInt(71);
-        }
-    }
+    private final String PORT = "8001";
 
     public static void SendData() {
         String message;
-        message = Variables.enemyButton1Pressed + "-" +
-                Variables.enemyButton2Pressed + "-" +
-                Variables.enemyButton3Pressed + "-" +
-                Variables.enemyButton1firstclick + "-" +
-                Variables.enemyButton2firstclick + "-" +
-                Variables.enemyButton3firstclick + "-" +
+        message = Variables.player_number + "-" +                      // 0
+                (Variables.enemyButton1Pressed ? 1 : 0) + "-" +
+                (Variables.enemyButton2Pressed ? 1 : 0) + "-" +
+                (Variables.enemyButton3Pressed ? 1 : 0) + "-" +
+                (Variables.enemyButton1firstclick ? 1 : 0) + "-" +
+                (Variables.enemyButton2firstclick ? 1 : 0) + "-" +     // 5
+                (Variables.enemyButton3firstclick ? 1 : 0) + "-" +
                 Variables.enemy_card1 + "-" +
                 Variables.enemy_card2 + "-" +
                 Variables.enemy_card3 + "-" +
-                Variables.enemy_table_card + "-" +
+                Variables.enemy_table_card + "-" +                     // 10
                 Variables.enemy_points + "-" +
-                Variables.playerButton1Pressed + "-" +
-                Variables.playerButton2Pressed + "-" +
-                Variables.playerButton3Pressed + "-" +
-                Variables.playerButton1firstclick + "-" +
-                Variables.playerButton2firstclick + "-" +
-                Variables.playerButton3firstclick + "-" +
+                (Variables.playerButton1Pressed ? 1 : 0) + "-" +
+                (Variables.playerButton2Pressed ? 1 : 0) + "-" +
+                (Variables.playerButton3Pressed ? 1 : 0) + "-" +
+                (Variables.playerButton1firstclick ? 1 : 0) + "-" +    // 15
+                (Variables.playerButton2firstclick ? 1 : 0) + "-" +
+                (Variables.playerButton3firstclick ? 1 : 0) + "-" +
                 Variables.player_card1 + "-" +
                 Variables.player_card2 + "-" +
-                Variables.player_card3 + "-" +
+                Variables.player_card3 + "-" +                         // 20
                 Variables.player_table_card + "-" +
                 Variables.player_points + "-" +
                 Variables.usedCardsCount + "-" +
-                Variables.gameFinished:1
-    }
+                (Variables.gameFinished ? 1 : 0) + "-" +
+                (Variables.playerTurn ? 1 : 0) + "-" +                 // 25
+                (Variables.playerLastDropped ? 1 : 0) + "-" +
+                (Variables.playerWins ? 1 : 0) + "-" +
+                (Variables.playerFirstDrop ? 1 : 0) + "-" +
+                Variables.winnerType + "-" +
+                Variables.droppedCards + "-" +                         // 30
+                Variables.droppedLast + "-" +
+                Variables.userCardsArrey[0] + "-" +                    // 32
+                Variables.userCardsArrey[1] + "-" +
+                Variables.userCardsArrey[2] + "-" +
+                Variables.userCardsArrey[3] + "-" +
+                Variables.userCardsArrey[4] + "-" +
+                Variables.userCardsArrey[5] + "-" +
+                Variables.userCardsArrey[6] + "-" +
+                Variables.userCardsArrey[7] + "-" +
+                Variables.userCardsArrey[8] + "-" +                    // 40
+                Variables.userCardsArrey[9] + "-" +
+                Variables.userCardsArrey[10] + "-" +
+                Variables.userCardsArrey[11] + "-" +
+                Variables.userCardsArrey[12] + "-" +
+                Variables.userCardsArrey[13] + "-" +                   // 45
+                Variables.userCardsArrey[14] + "-" +
+                Variables.userCardsArrey[15] + "-" +
+                Variables.userCardsArrey[16] + "-" +
+                Variables.userCardsArrey[17] + "-" +
+                Variables.userCardsArrey[18] + "-" +                   // 50
+                Variables.userCardsArrey[19] + "-" +
+                Variables.userCardsArrey[20] + "-" +
+                Variables.userCardsArrey[21] + "-" +
+                Variables.userCardsArrey[22] + "-" +
+                Variables.userCardsArrey[23] + "-" +                   // 55
+                Variables.userCardsArrey[24] + "-" +
+                Variables.userCardsArrey[25] + "-" +
+                Variables.userCardsArrey[26] + "-" +
+                Variables.userCardsArrey[27] + "-" +
+                Variables.userCardsArrey[28] + "-" +                   // 60
+                Variables.userCardsArrey[29] + "-" +
+                Variables.userCardsArrey[30] + "-" +
+                Variables.userCardsArrey[31] + "-" +
+                Variables.userCardsArrey[32] + "-" +
+                Variables.userCardsArrey[33] + "-" +                   // 65
+                Variables.userCardsArrey[34] + "-" +
+                Variables.userCardsArrey[35] + "-" +
+                Variables.userCardsArrey[36] + "-" +
+                Variables.userCardsArrey[37] + "-" +
+                Variables.userCardsArrey[38] + "-" +                   // 70
+                Variables.userCardsArrey[39];
 
+        try {
+            ClientThread th = new ClientThread(message);
+            th.runthread();
+        }
+        catch(Exception e){
+            e.printStackTrace();
+        }
+    }
 
     // On Create
     @SuppressLint("SetTextI18n")
@@ -191,7 +138,12 @@ public class OnlineGamePlay extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //setContentView(R.layout.activity_online_game_play);
-        setContentView(R.layout.activity_game_play);
+        setContentView(R.layout.activity_online_game_play);
+
+        // setting cards to -1
+        for (int i = 0; i < 40; i++){
+            Variables.userCardsArrey[i] = -1;
+        }
 
         // Internet Permissions
         ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.INTERNET}, PackageManager.PERMISSION_GRANTED);
@@ -199,13 +151,6 @@ public class OnlineGamePlay extends AppCompatActivity {
         // DATABASE
         StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
         StrictMode.setThreadPolicy(policy);
-
-        try {
-            Class.forName(CLASSES);
-            CONNECTION = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-        } catch (ClassNotFoundException | SQLException e) {
-            e.printStackTrace();   // ERROR
-        }
 
         // ID declarations
         setButtonsID();
@@ -237,18 +182,18 @@ public class OnlineGamePlay extends AppCompatActivity {
     }
 
     private void setButtonsID(){
-        cardWinnerTypeLabel = findViewById(R.id.WinnerTypeLabel);
-        playerPointsLabel = findViewById(R.id.PlayerPointsLabel);
-        enemyPointsLabel = findViewById(R.id.EnemyPointsLabel);
-        enemyTableCard = findViewById(R.id.enemyDroppedCard);
-        pauseButton = (ImageButton)findViewById(R.id.pauseButton);
-        playerCard1 = findViewById(R.id.playerCard1);
-        playerCard2 = findViewById(R.id.playerCard2);
-        playerCard3 = findViewById(R.id.playerCard3);
-        playerTableCard = findViewById(R.id.playerDroppedCard);
-        enemyCard1 = findViewById(R.id.enemyCard1);
-        enemyCard2 = findViewById(R.id.enemyCard2);
-        enemyCard3 = findViewById(R.id.enemyCard3);
+        cardWinnerTypeLabel = findViewById(R.id.WinnerTypeLabelo);
+        playerPointsLabel = findViewById(R.id.PlayerPointsLabelo);
+        enemyPointsLabel = findViewById(R.id.EnemyPointsLabelo);
+        enemyTableCard = findViewById(R.id.enemyDroppedCardo);
+        pauseButton = (ImageButton)findViewById(R.id.pauseButtono);
+        playerCard1 = findViewById(R.id.playerCard1o);
+        playerCard2 = findViewById(R.id.playerCard2o);
+        playerCard3 = findViewById(R.id.playerCard3o);
+        playerTableCard = findViewById(R.id.playerDroppedCardo);
+        enemyCard1 = findViewById(R.id.enemyCard1o);
+        enemyCard2 = findViewById(R.id.enemyCard2o);
+        enemyCard3 = findViewById(R.id.enemyCard3o);
     }
 
     private void setButtonListeners(){
@@ -265,6 +210,7 @@ public class OnlineGamePlay extends AppCompatActivity {
             else {
                 if (Variables.player_number == 1) on_playerCard_clicked_player(1);
                 else if (Variables.player_number == 2) on_playerCard_clicked_enemy(1);
+                SendData();
             }
         });
 
@@ -280,6 +226,7 @@ public class OnlineGamePlay extends AppCompatActivity {
             else {
                 if (Variables.player_number == 1) on_playerCard_clicked_player(2);
                 else if (Variables.player_number == 2) on_playerCard_clicked_enemy(2);
+                SendData();
             }
         });
 
@@ -295,6 +242,7 @@ public class OnlineGamePlay extends AppCompatActivity {
             else {
                 if (Variables.player_number == 1) on_playerCard_clicked_player(3);
                 else if (Variables.player_number == 2) on_playerCard_clicked_enemy(3);
+                SendData();
             }
         });
 
